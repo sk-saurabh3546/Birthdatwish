@@ -1,0 +1,235 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Let's Cut the Cake!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #FFDAE9, #D8A2E8);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: Dancing Script, cursive;
+      color: #FF69B4;
+    }
+
+    /* Glowing text */
+    .cake-text {
+      font-size: 4em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+      }
+      to {
+        text-shadow: 0 0 15px rgba(255, 105, 180, 0.9);
+      }
+    }
+
+    /* Cake */
+    .cake {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      /* background-image: url('cake.jpg'); Updated cake image */
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .cake:hover {
+      transform: scale(1.1);
+    }
+
+    /* Candle */
+    .candle {
+      position: absolute;
+      top: -15px;
+      left: 57%;
+      width: 17px;
+      height: 62px;
+      background-color: white;
+      transform: translateX(-50%);
+    }
+
+    .candle::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -2px;
+      width: 20px;
+      height: 20px;
+      background-color: orange;
+      border-radius: 50%;
+    }
+
+    /* Flying elements */
+    .flying-element {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      opacity: 0;
+      animation: fly 2s ease-out forwards;
+    }
+
+    @keyframes fly {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-300px) translateX(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Next page button */
+    .next-page {
+      background-color: #FFB6C1;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      margin-top: 20px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 1s ease;
+      font-family: fantasy;
+    }
+
+    /* Style the arrow */
+    .next-page::after {
+      content: ' →'; /* Unicode right arrow */
+    }
+     .audio-container {
+      text-align: center;
+    }
+    
+    .clickable-image {
+      cursor: pointer;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .clickable-image:hover {
+      transform: scale(1.05);
+    }
+    .cake img {
+      width: fit-content;
+    }
+  </style>
+</head>
+<body>
+  <div class="cake-text">Let's Cut the Cake! 🎂</div>
+  <div class="cake">
+     <img id="audio-trigger" class="clickable-image" src="cake.jpg" alt="Click to Play Audio" width="300">
+    <audio id="audio-player" src="happybirthday.mp3"></audio>
+    <div class="candle">rthday.mp
+      <!-- <img id="audio-trigger" class="clickable-image" src="your-image.jpg" alt="Click to Play Audio" width="300">
+    <audio id="audio-player" src="happybirthday.mp3"></audio> -->
+    </div>
+  </div>
+  <div class="next-page" onclick="goToNextPage()">Next Page</div>
+
+  <script>
+    const cake = document.querySelector('.cake');
+    const candle = document.querySelector('.candle');
+    const nextPage = document.querySelector('.next-page');
+    let animationTimeout;
+
+    cake.addEventListener('click', function() {
+      // Remove the candle
+      candle.style.display = 'none';
+
+      // Show the next page button
+      nextPage.style.opacity = 1;
+
+      // Trigger the flying elements animation
+      startFlyingAnimation();
+    });
+
+    function startFlyingAnimation() {
+      const numberOfElements = 100; // Adjust the number as needed
+
+      for (let i = 0; i < numberOfElements; i++) {
+        createFlyingElement();
+      }
+
+      // Clear any existing timeout
+      clearTimeout(animationTimeout);
+
+      // Stop the animation after 3 seconds
+      animationTimeout = setTimeout(stopFlyingAnimation, 3000);
+    }
+
+    function createFlyingElement() {
+      const flyingElement = document.createElement('div');
+      flyingElement.className = 'flying-element';
+
+      // Randomly choose between balloon and heart
+      const isBalloon = Math.random() < 0.5;
+
+      if (isBalloon) {
+        flyingElement.style.backgroundImage = 'url("https://i.imgur.com/WqFj6xJ.png")'; // balloon image
+        flyingElement.style.backgroundSize = 'contain';
+      } else {
+        flyingElement.style.width = '20px';
+        flyingElement.style.height = '20px';
+        flyingElement.style.borderRadius = '50%';
+        flyingElement.style.backgroundColor = 'red';
+      }
+
+      flyingElement.style.left = Math.random() * 100 + 'vw';
+      flyingElement.style.top = '80vh'; // Start from the bottom
+      flyingElement.style.animationDelay = Math.random() * 2 + 's';
+      document.body.appendChild(flyingElement);
+
+      flyingElement.addEventListener('animationend', function() {
+        flyingElement.remove();
+      });
+    }
+     const audioTrigger = document.getElementById('audio-trigger');
+    const audioPlayer = document.getElementById('audio-player');
+    const playDuration = 26000; // 26seconds
+
+    audioTrigger.addEventListener('click', function() {
+      audioPlayer.play();
+
+      setTimeout(function() {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0; // Reset to the beginning
+      }, playDuration);
+    });
+
+    function stopFlyingAnimation() {
+      // Remove all flying elements
+      const flyingElements = document.querySelectorAll('.flying-element');
+      flyingElements.forEach(element => element.remove());
+    }
+
+    function goToNextPage() {
+      window.location.href = './page5.html'; // Replace with the actual URL
+    }
+  </script>
+</body>
+</html>
+
